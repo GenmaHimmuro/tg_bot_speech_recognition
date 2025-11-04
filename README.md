@@ -4,11 +4,11 @@
 
 Пример работы в ТГ:
 
-![Анимация_ТГбота](gifs\Анимация_ТГбота.gif)
+![Анимация_ТГбота](https://github.com/GenmaHimmuro/tg_bot_speech_recognition/blob/master/gifs/Анимация_ВКбота.gif)
 
 Пример работы в ВК:
 
-![Анимация_ВКбота](gifs\Анимация_ВКбота.gif)
+![Анимация_ВКбота](https://github.com/GenmaHimmuro/tg_bot_speech_recognition/blob/master/gifs/Анимация_ТГбота.gif)
 
 
 ## Как установить
