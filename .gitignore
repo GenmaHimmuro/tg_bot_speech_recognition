@@ -1,3 +1,4 @@
+*.json
 staticfiles/
 bundles/**
 node_modules/
