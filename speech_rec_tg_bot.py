@@ -30,13 +30,12 @@ def handle_text(update: Update, context: CallbackContext):
     user_text = update.message.text.strip()
     session_id = get_session_id(update)
 
-    reply = detect_intent_texts(
+    response_text, is_fallback = detect_intent_texts(
         project_id=DIALOG_FLOW_PROJECT_ID,
         session_id=session_id,
-        text=user_text,
-        language_code='ru'
+        text=user_text
     )
-    update.message.reply_text(reply)
+    update.message.reply_text(response_text)
 
 
 def main():

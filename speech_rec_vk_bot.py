@@ -21,21 +21,18 @@ def main():
             user_id = event.user_id
             user_text = event.text.strip()
             session_id = str(user_id)
-
-            response_text = detect_intent_texts(
+            
+            response_text, is_fallback = detect_intent_texts(
                 project_id=project_id,
                 session_id=session_id,
                 text=user_text
             )
-
-            if not response_text:
-                response_text = "Извини, я не понял. Попробуй ещё раз!"
-
-            vk_api.messages.send(
-                user_id=user_id,
-                message=response_text,
-                random_id=get_random_id()
-            )
+            if not is_fallback and response_text:
+                vk_api.messages.send(
+                    user_id=user_id,
+                    message=response_text,
+                    random_id=get_random_id()
+                )
 
 
 if __name__ == '__main__':

@@ -12,6 +12,7 @@ def detect_intent_texts(project_id, session_id, text, language_code = 'ru'):
         request={"session": session_path, "query_input": query_input}
     )
     fulfillment_text = response.query_result.fulfillment_text
+    is_fallback = response.query_result.intent.is_fallback
     print(f"[Dialogflow] Пользователь: {text}")
     print(f"[Dialogflow] Ответ: {fulfillment_text}\n")
-    return fulfillment_text
+    return fulfillment_text, is_fallback
