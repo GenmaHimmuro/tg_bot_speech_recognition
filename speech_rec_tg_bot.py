@@ -39,8 +39,6 @@ def handle_text(update: Update, context: CallbackContext):
 
 
 def main():
-    print("Запуск бота с Dialogflow...")
-
     updater = Updater(TG_BOT_TOKEN, use_context=True)
     dp = updater.dispatcher
 
