@@ -1,6 +1,8 @@
-from telegram import Update
+from telegram import Update, Bot
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from environs import Env
+import traceback
+import sys
 
 from dialog_flow_response import detect_intent_texts
 
@@ -11,6 +13,7 @@ env.read_env()
 
 TG_BOT_TOKEN = env.str("TG_BOT_TOKEN")
 DIALOG_FLOW_PROJECT_ID = env.str("DIALOG_FLOW_PROJECT_ID")
+ADMIN_CHAT_ID_TG = env.int("ADMIN_CHAT_ID_TG")
 
 
 def get_session_id(update: Update) -> str:
@@ -39,14 +42,20 @@ def handle_text(update: Update, context: CallbackContext):
 
 
 def main():
-    updater = Updater(TG_BOT_TOKEN, use_context=True)
-    dp = updater.dispatcher
+    try:
+        updater = Updater(TG_BOT_TOKEN, use_context=True)
+        dp = updater.dispatcher
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_text))
-
-    updater.start_polling(poll_interval=1.0, timeout=10)
-    updater.idle()
+        dp.add_handler(CommandHandler("start", start))
+        dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_text))
+    
+        updater.start_polling(poll_interval=1.0, timeout=10)
+        updater.idle()
+    except Exception as e:
+        bot = Bot(token=TG_BOT_TOKEN)
+        error_message = f"❗ Бот упал с ошибкой:\n{e}\n\nTraceback:\n{traceback.format_exc()}"
+        bot.send_message(chat_id=ADMIN_CHAT_ID_TG, text=error_message)
+        sys.exit(1)
 
 
 if __name__ == '__main__':
