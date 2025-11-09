@@ -5,10 +5,6 @@ from google.api_core.exceptions import InvalidArgument
 from environs import Env
 
 
-env = Env()
-env.read_env()
-
-
 def create_intent(project_id, display_name, training_phrases, message_texts):
     intents_client = dialogflow.IntentsClient()
     parent = dialogflow.AgentsClient.agent_path(project_id)
@@ -38,12 +34,12 @@ def main():
 
     try:
         with open(args.file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+            new_intents = json.load(f)
     except Exception as e:
         print(f"Ошибка чтения файла: {e}")
         return
 
-    for display_name, content in data.items():
+    for display_name, content in new_intents.items():
         questions = content.get("questions", [])
         answer = content.get("answer", "Нет ответа")
         try:
@@ -58,4 +54,6 @@ def main():
 
 
 if __name__ == "__main__":
+    env = Env()
+    env.read_env()
     main()

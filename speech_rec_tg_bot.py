@@ -7,19 +7,6 @@ import sys
 from dialog_flow_response import detect_intent_texts
 
 
-env = Env()
-env.read_env()
-
-
-TG_BOT_TOKEN = env.str("TG_BOT_TOKEN")
-DIALOG_FLOW_PROJECT_ID = env.str("DIALOG_FLOW_PROJECT_ID")
-ADMIN_CHAT_ID_TG = env.int("ADMIN_CHAT_ID_TG")
-
-
-def get_session_id(update: Update) -> str:
-    return str(update.effective_chat.id)
-
-
 def start(update: Update, context: CallbackContext):
     user = update.effective_user
     welcome = (
@@ -30,33 +17,35 @@ def start(update: Update, context: CallbackContext):
 
 
 def handle_text(update: Update, context: CallbackContext):
+    dialog_flow_project_id = env.str("DIALOG_FLOW_PROJECT_ID")
     user_text = update.message.text.strip()
-    session_id = get_session_id(update)
 
     response_text, is_fallback = detect_intent_texts(
-        project_id=DIALOG_FLOW_PROJECT_ID,
-        session_id=session_id,
+        project_id=dialog_flow_project_id,
+        session_id=f'tg-{update.effective_chat.id}',
         text=user_text
     )
     update.message.reply_text(response_text)
 
 
 def main():
+    tg_bot_token = env.str("TG_BOT_TOKEN")
+    admin_chat_id_tg = env.int("ADMIN_CHAT_ID_TG")
     try:
-        updater = Updater(TG_BOT_TOKEN, use_context=True)
+        updater = Updater(tg_bot_token, use_context=True)
         dp = updater.dispatcher
-
         dp.add_handler(CommandHandler("start", start))
         dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_text))
-    
         updater.start_polling(poll_interval=1.0, timeout=10)
         updater.idle()
     except Exception as e:
-        bot = Bot(token=TG_BOT_TOKEN)
+        bot = Bot(token=tg_bot_token)
         error_message = f"❗ Бот упал с ошибкой:\n{e}\n\nTraceback:\n{traceback.format_exc()}"
-        bot.send_message(chat_id=ADMIN_CHAT_ID_TG, text=error_message)
+        bot.send_message(chat_id=admin_chat_id_tg, text=error_message)
         sys.exit(1)
 
 
 if __name__ == '__main__':
+    env = Env()
+    env.read_env()
     main()
