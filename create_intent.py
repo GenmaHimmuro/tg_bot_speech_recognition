@@ -28,6 +28,9 @@ def create_intent(project_id, display_name, training_phrases, message_texts):
 
 
 def main():
+    env = Env()
+    env.read_env()
+
     parser = argparse.ArgumentParser(description="Создание интентов из JSON")
     parser.add_argument("--file", required=True, help="Путь к JSON-файлу")
     args = parser.parse_args()
@@ -54,6 +57,4 @@ def main():
 
 
 if __name__ == "__main__":
-    env = Env()
-    env.read_env()
     main()

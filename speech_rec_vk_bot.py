@@ -10,6 +10,8 @@ from dialog_flow_response import detect_intent_texts
 
 
 def main():
+    env = Env()
+    env.read_env()
     admin_chat_id_tg = env.int("ADMIN_CHAT_ID_TG")
     tg_bot_token = env.str("TG_BOT_TOKEN")
     project_id = env.str('DIALOG_FLOW_PROJECT_ID')  
@@ -49,7 +51,5 @@ def main():
 
 
 if __name__ == '__main__':
-    env = Env()
-    env.read_env()
     main()
     
